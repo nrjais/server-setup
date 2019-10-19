@@ -1,0 +1,35 @@
+[global]
+  checkNewVersion = false
+  sendAnonymousUsage = false
+
+[log]
+  level = "debug"
+
+[api]
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+  [entryPoints.https]
+    address = ":443"
+
+[providers.docker]
+  watch = true
+  defaultRule = "Host(`{{(split `-` .Name)._0}}.***REMOVED***`)"
+  exposedByDefault = true
+
+[providers.file]
+  filename = "/conf/traefik.dyn.toml"
+  watch = true
+
+[certificatesResolvers.ssl.acme]
+  email = "***REMOVED***"
+  storage = "/ssl/acme.json"
+  tlschallenge=true
+  # caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+[certificatesResolvers.ssl.acme.dnsChallenge]
+    provider = "cloudflare"
+    delayBeforeCheck = 0
+
+
