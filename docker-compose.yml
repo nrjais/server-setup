@@ -48,10 +48,20 @@ services:
       - "traefik.http.routers.bitwarden.entrypoints=https"
       - "traefik.http.routers.bitwarden.tls.certresolver=ssl"
       - "traefik.http.routers.bitwarden.tls.domains[0].main=*.***REMOVED***"
+      - "traefik.http.routers.bitwarden-ws.rule=Host(`bitwarden.***REMOVED***`) && Path(`/notifications/hub`)"
+      - "traefik.http.routers.bitwarden-ws.service=bitwarden-ws"
+      - "traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012"
     volumes:
       - /data/bw-data/:/data/
     networks:
       - web
+
+  rclone:
+    build: rclone
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - /data/:/data/
 
 networks:
   web:
