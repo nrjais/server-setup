@@ -15,4 +15,4 @@ COPY ./rclone.conf /secrets/rclone.conf
 VOLUME [ "/data" ]
 
 ENTRYPOINT [ "watchexec", "-w", "/data", "--"]
-CMD [ "rclone", "--config", "/secrets/rclone.conf", "sync", "/data", "dropbox:/server-data" ]
+CMD [ "rclone", "--config", "/secrets/rclone.conf", "sync", "/data", "enc:/" ]
