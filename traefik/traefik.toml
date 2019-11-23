@@ -3,7 +3,8 @@
   sendAnonymousUsage = false
 
 [log]
-  level = "debug"
+  level = "INFO"
+  filePath = "/logs/traefik.log"
 
 [api]
 

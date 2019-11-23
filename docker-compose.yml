@@ -2,7 +2,7 @@ version: "3"
 
 services:
   traefik:
-    image: traefik:v2.0
+    image: traefik:2.0
     command: "--configFile=/conf/traefik.toml"
     environment:
       - CF_DNS_API_TOKEN=***REMOVED***
@@ -16,26 +16,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/conf
       - /secrets/ssl:/ssl
-    networks:
-      - web
-
-  netdata:
-    image: netdata/netdata
-    labels:
-      - "traefik.http.routers.netdata.entrypoints=https"
-      - "traefik.http.routers.netdata.tls.certresolver=ssl"
-      - "traefik.http.routers.netdata.middlewares=auth@file"
-      - "traefik.http.routers.netdata.tls.domains[0].main=*.***REMOVED***"
-    volumes:
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    cap_add:
-      - SYS_PTRACE
-    security_opt:
-      - apparmor:unconfined
+      - /logs:/logs
     networks:
       - web
 
