@@ -16,7 +16,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/conf
       - /secrets/ssl:/ssl
-      - /logs:/logs
     networks:
       - web
 
@@ -39,6 +38,19 @@ services:
       - "traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012"
     volumes:
       - /data/bw-data/:/data/
+    networks:
+      - web
+
+  logs:
+    image: amir20/dozzle
+    labels:
+      - "traefik.http.routers.logs.entrypoints=https"
+      - "traefik.http.routers.logs.tls.certresolver=ssl"
+      - "traefik.http.routers.logs.middlewares=auth@file"
+      - "traefik.http.services.logs.loadbalancer.server.port=8080"
+      - "traefik.http.routers.logs.tls.domains[0].main=*.***REMOVED***"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - web
 
