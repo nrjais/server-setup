@@ -5,8 +5,8 @@ services:
     image: traefik:2.1
     command: "--configFile=/conf/traefik.toml"
     environment:
-      - CF_DNS_API_TOKEN=***REMOVED***
-      - CF_ZONE_API_TOKEN=***REMOVED***
+      - CF_DNS_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CF_ZONE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
     labels:
       - "traefik.enable=false"
     ports:
@@ -27,19 +27,21 @@ services:
     labels:
       - "traefik.http.routers.bitwarden.entrypoints=https"
       - "traefik.http.routers.bitwarden.tls.certresolver=ssl"
-      - "traefik.http.routers.bitwarden.tls.domains[0].main=*.***REMOVED***"
+      - "traefik.http.routers.bitwarden.tls.domains[0].main=*.${ROOT_DOMAIN}"
       - "traefik.http.routers.bitwarden.service=bitwarden"
       - "traefik.http.services.bitwarden.loadbalancer.server.port=80"
-      - "traefik.http.routers.bitwarden-ws.rule=Host(`bitwarden.***REMOVED***`) && Path(`/notifications/hub`)"
+      - "traefik.http.routers.bitwarden-ws.rule=Host(`bitwarden.${ROOT_DOMAIN}`) && Path(`/notifications/hub`)"
       - "traefik.http.routers.bitwarden-ws.entrypoints=https"
       - "traefik.http.routers.bitwarden-ws.tls.certresolver=ssl"
-      - "traefik.http.routers.bitwarden-ws.tls.domains[0].main=*.***REMOVED***"
+      - "traefik.http.routers.bitwarden-ws.tls.domains[0].main=*.${ROOT_DOMAIN}"
       - "traefik.http.routers.bitwarden-ws.service=bitwarden-ws"
       - "traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012"
     volumes:
       - /data/bw-data/:/data/
     networks:
       - web
+    depends_on:
+      - "rclone"
 
   logs:
     image: amir20/dozzle
@@ -48,7 +50,7 @@ services:
       - "traefik.http.routers.logs.tls.certresolver=ssl"
       - "traefik.http.routers.logs.middlewares=auth@file"
       - "traefik.http.services.logs.loadbalancer.server.port=8080"
-      - "traefik.http.routers.logs.tls.domains[0].main=*.***REMOVED***"
+      - "traefik.http.routers.logs.tls.domains[0].main=*.${ROOT_DOMAIN}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:

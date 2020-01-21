@@ -1,24 +1,6 @@
 Use env file for secrets
-Parameterize domain name
-Find a way to generate subdomain host rule for service automatically
-
-Automate addition of subdomains on cloudflare (request sample below)
-```
-// Get zones
-curl -X GET "https://api.cloudflare.com/client/v4/zones?name=***REMOVED***&status=active&page=1&per_page=1&order=status&direction=desc&match=all" \
-     -H "X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41" \
-     -H "Content-Type: application/json"
-
-// Create CNAME record
-curl -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/dns_records" \
-     -H "X-Auth-Email: ***REMOVED***" \
-     -H "X-Auth-Key: $CF_API_TOKEN" \
-     -H "Content-Type: application/json" \
-     --data '{"type":"CNAME","name":"fireguard","content":"***REMOVED***", "proxied":true}'
-```
 
 Auto full server one command setup and run
-
 
 /// Host these
 Add wireguard VPN
