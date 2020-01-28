@@ -43,6 +43,18 @@ services:
     depends_on:
       - "rclone"
 
+  whl:
+    image: nrjais/whl
+    labels:
+      - "traefik.http.routers.whl.entrypoints=https"
+      - "traefik.http.routers.whl.tls.certresolver=ssl"
+      - "traefik.http.routers.whl.tls.domains[0].main=*.${ROOT_DOMAIN}"
+    volumes:
+      - /blog:/blog
+      - ./whl:/app/config
+    networks:
+      - web
+
   logs:
     image: amir20/dozzle
     labels:

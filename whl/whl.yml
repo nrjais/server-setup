@@ -1,0 +1,4 @@
+repos:
+  - name: nrjais/blog
+    dir: /blog
+    cmd: git pull --rebase

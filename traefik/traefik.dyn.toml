@@ -10,6 +10,11 @@
     replacement = "https://github.com/nrjais"
     permanent = true
 
+  [http.middlewares.wwwredirect.redirectRegex]
+    regex = ".*"
+    replacement = "https://***REMOVED***"
+    permanent = true
+
 [http.routers]
   [http.routers.redirecttohttps]
     entryPoints = ["http"]
@@ -20,11 +25,21 @@
   [http.routers.redirecttogithub]
     entryPoints = ["https"]
     middlewares = ["githubredirect"]
-    rule = "Host(`***REMOVED***`, `www.***REMOVED***`, `github.***REMOVED***`)"
+    rule = "Host(`github.***REMOVED***`)"
     service = "noop"
     [http.routers.redirecttogithub.tls]
       certResolver = "ssl"
     [[http.routers.redirecttogithub.tls.domains]]
+      main = "*.***REMOVED***"
+
+  [http.routers.wwwredirect]
+    entryPoints = ["https"]
+    middlewares = ["wwwredirect"]
+    rule = "Host(`www.***REMOVED***`)"
+    service = "noop"
+    [http.routers.wwwredirect.tls]
+      certResolver = "ssl"
+    [[http.routers.wwwredirect.tls.domains]]
       main = "*.***REMOVED***"
 
   [http.routers.api]
