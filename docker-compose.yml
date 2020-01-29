@@ -56,19 +56,14 @@ services:
       - web
 
   blog:
-    image: j1mc/docker-zola
-    command:
-      - serve
-      - -i
-      - 0.0.0.0
-    working_dir: /app
+    image: halverneus/static-file-server
     labels:
       - "traefik.http.routers.blog.entrypoints=https"
       - "traefik.http.routers.blog.tls.certresolver=ssl"
       - "traefik.http.routers.blog.tls.domains[0].main=*.${ROOT_DOMAIN}"
       - "traefik.http.routers.blog.rule=Host(`${ROOT_DOMAIN}`)"
     volumes:
-      - /blog:/app
+      - /blog:/web
     networks:
       - web
 

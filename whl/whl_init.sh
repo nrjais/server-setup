@@ -2,5 +2,4 @@
 
 apk add git
 
-rm -rf /blog
-git clone --depth=1 https://github.com/nrjais/blog.git /blog
+git clone https://github.com/nrjais/blog --branch=site /blog
