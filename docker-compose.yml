@@ -43,6 +43,22 @@ services:
     depends_on:
       - "rclone"
 
+  golinks:
+    image: prologic/golinks
+    command:
+      - -dbpath=/data
+      - -fqdn=https://golinks.${ROOT_DOMAIN}
+    labels:
+      - "traefik.http.routers.golinks.entrypoints=https"
+      - "traefik.http.routers.golinks.tls.certresolver=ssl"
+      - "traefik.http.routers.golinks.tls.domains[0].main=*.${ROOT_DOMAIN}"
+    volumes:
+      - /data/golinks/:/data/
+    networks:
+      - web
+    depends_on:
+      - "rclone"
+
   whl:
     image: nrjais/whl
     labels:
