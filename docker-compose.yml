@@ -47,7 +47,7 @@ services:
     image: prologic/golinks
     command:
       - -dbpath=/data
-      - -fqdn=https://golinks.${ROOT_DOMAIN}
+      - -fqdn=golinks.${ROOT_DOMAIN}
     labels:
       - "traefik.http.routers.golinks.entrypoints=https"
       - "traefik.http.routers.golinks.tls.certresolver=ssl"
