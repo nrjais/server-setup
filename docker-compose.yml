@@ -38,6 +38,7 @@ services:
       - "traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012"
     volumes:
       - /data/bw-data/:/data/
+      - /cache/bw_icon/:/cache/bw_icon
     networks:
       - web
     depends_on:
