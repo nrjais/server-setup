@@ -85,6 +85,8 @@ services:
       - /blog:/web:ro
     networks:
       - web
+    depends_on:
+      - "whl"
 
   logs:
     image: amir20/dozzle
