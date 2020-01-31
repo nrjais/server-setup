@@ -73,14 +73,16 @@ services:
       - web
 
   blog:
-    image: halverneus/static-file-server
+    image: m3ng9i/ran
+    command:
+      - -404=/404.html
     labels:
       - "traefik.http.routers.blog.entrypoints=https"
       - "traefik.http.routers.blog.tls.certresolver=ssl"
       - "traefik.http.routers.blog.tls.domains[0].main=*.${ROOT_DOMAIN}"
       - "traefik.http.routers.blog.rule=Host(`${ROOT_DOMAIN}`)"
     volumes:
-      - /blog:/web
+      - /blog:/web:ro
     networks:
       - web
 
