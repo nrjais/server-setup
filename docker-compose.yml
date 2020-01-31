@@ -4,6 +4,7 @@ services:
   traefik:
     image: traefik:2.1
     command: "--configFile=/conf/traefik.toml"
+    restart: always
     environment:
       - CF_DNS_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - CF_ZONE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
@@ -21,6 +22,7 @@ services:
 
   bitwarden:
     image: bitwardenrs/server:alpine
+    restart: always
     environment:
       - ROCKET_WORKERS=2
       - ROCKET_ENV=prod
@@ -46,6 +48,7 @@ services:
 
   golinks:
     image: prologic/golinks
+    restart: always
     command:
       - -dbpath=/data
       - -fqdn=golinks.${ROOT_DOMAIN}
@@ -62,6 +65,7 @@ services:
 
   whl:
     image: nrjais/whl
+    restart: always
     labels:
       - "traefik.http.routers.whl.entrypoints=https"
       - "traefik.http.routers.whl.tls.certresolver=ssl"
@@ -74,6 +78,7 @@ services:
 
   blog:
     image: m3ng9i/ran
+    restart: always
     command:
       - -404=/404.html
     labels:
@@ -90,6 +95,7 @@ services:
 
   logs:
     image: amir20/dozzle
+    restart: always
     labels:
       - "traefik.http.routers.logs.entrypoints=https"
       - "traefik.http.routers.logs.tls.certresolver=ssl"
@@ -103,6 +109,7 @@ services:
 
   rclone:
     build: rclone
+    restart: always
     labels:
       - "traefik.enable=false"
     volumes:
