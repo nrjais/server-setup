@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   traefik:
@@ -114,6 +114,20 @@ services:
       - "traefik.enable=false"
     volumes:
       - /data/:/data/
+
+  wg:
+    image: subspacecloud/subspace:latest
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
+    restart: always
+    environment:
+      - SUBSPACE_HTTP_HOST=wg.${ROOT_DOMAIN}
+      - SUBSPACE_HTTP_INSECURE=true
+      - SUBSPACE_LETSENCRYPT=false
+    volumes:
+      - /usr/bin/wg:/usr/bin/wg
+      - /data/wg:/data
 
 networks:
   web:
