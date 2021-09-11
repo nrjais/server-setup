@@ -1,0 +1,51 @@
+#! /bin/bash
+set -e
+
+DOCKER_COMPOSE_VERSION=1.27.4
+WATCHEXEC_VERSION='1.12.0'
+
+apt-get update
+apt-get upgrade -y
+
+install_docker() {
+  apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  echo \
+    "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+
+  apt-get update
+
+  apt-get install docker-ce docker-ce-cli containerd.io -y
+}
+
+install_compose() {
+  curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose
+  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+}
+
+install_envsbst() {
+  curl -L https://github.com/a8m/envsubst/releases/download/v1.1.0/envsubst-$(uname -s)-$(uname -m) -o envsubst
+  chmod +x envsubst
+  sudo mv envsubst /usr/local/bin
+}
+
+install_watchexec() {
+  curl -L https://github.com/watchexec/watchexec/releases/download/${WATCHEXEC_VERSION}/watchexec-${WATCHEXEC_VERSION}-x86_64-unknown-linux-gnu.deb -o /tmp/watchexec.deb
+  apt-get install /tmp/watchexec.deb -y
+}
+
+apt-get install fish -y
+apt-get install rclone -y
+
+install_docker
+install_compose
+install_envsbst
+install_watchexec
+
+apt-get full-upgrade -y
+
+apt autoremove

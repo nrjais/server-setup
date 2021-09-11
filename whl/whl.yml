@@ -1,0 +1,7 @@
+repos:
+  - name: nrjais/blog
+    dir: /blog
+    ref: refs/heads/site
+    cmd: |
+      git fetch --all
+      git reset --hard origin/site

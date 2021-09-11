@@ -1,0 +1,53 @@
+{
+	# acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+(auth) {
+	basicauth {
+		nrjais {$BASIC_AUTH_PASS}
+	}
+}
+
+(ssl) {
+	tls {
+		dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+}
+
+bitwarden.{$MY_DOMAIN} {
+	import ssl
+	encode gzip
+
+	header {
+		X-XSS-Protection "1; mode=block"
+		X-Frame-Options "DENY"
+		X-Robots-Tag "none"
+		-Server
+	}
+
+	reverse_proxy /notifications/hub/negotiate bitwarden:80
+	reverse_proxy /notifications/hub bitwarden:3012
+	reverse_proxy bitwarden:80
+}
+
+whl.{$MY_DOMAIN} {
+	import ssl
+	reverse_proxy whl:8080
+}
+
+www.{$MY_DOMAIN}, {$MY_DOMAIN} {
+	import ssl
+	encode gzip
+	file_server {
+		root /blog
+	}
+	handle_errors {
+		@404 {
+			expression {http.error.status_code} == 404
+		}
+		rewrite @404 /404.html
+		file_server {
+			root /blog
+		}
+	}
+}

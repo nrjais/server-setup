@@ -1,0 +1,72 @@
+version: "3"
+
+services:
+  caddy:
+    build: ./caddy
+    container_name: caddy
+    hostname: caddy
+    restart: unless-stopped
+    env_file: /secrets/.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /secrets/caddy/data:/data
+      - /secrets/caddy/config:/config
+      - /blog:/blog:ro
+    labels:
+      - centurylinklabs.watchtower.enable=false
+    networks:
+      - web
+    depends_on:
+      - bitwarden
+      - whl
+
+  bitwarden:
+    image: vaultwarden/server:alpine
+    container_name: bitwarden
+    restart: unless-stopped
+    environment:
+      - ROCKET_WORKERS=2
+      - ROCKET_ENV=prod
+      - WEBSOCKET_ENABLED=true
+      - ICON_CACHE_FOLDER=/cache/bw_icon
+    volumes:
+      - /data/bw-data/:/data/
+      - /cache/bw_icon/:/cache/bw_icon
+    networks:
+      - web
+    depends_on:
+      - rclone
+
+  whl:
+    image: nrjais/whl
+    container_name: whl
+    restart: unless-stopped
+    labels:
+      - centurylinklabs.watchtower.enable=false
+    volumes:
+      - /blog:/blog
+      - ./whl:/app/config
+    networks:
+      - web
+
+  rclone:
+    build: rclone
+    container_name: rclone
+    restart: unless-stopped
+    labels:
+      - centurylinklabs.watchtower.enable=false
+    volumes:
+      - /data/:/data/:ro
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  web:
