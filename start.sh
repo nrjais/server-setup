@@ -30,9 +30,9 @@ fetch_server_data() {
 
 [[ -f "$DATA_MARKER" ]] || fetch_server_data
 
-# docker-compose up -d --remove-orphans --force-recreate --build
-# docker-compose up -d --no-deps --build caddy
-docker-compose up -d --remove-orphans
-# docker-compose restart caddy
+# docker compose up -d --remove-orphans --force-recreate --build
+# docker compose up -d --no-deps --build caddy
+docker compose up -d --remove-orphans
+# docker compose restart caddy
 
 docker image prune -af

@@ -1,8 +1,8 @@
 #! /bin/bash
 set -e
 
-DOCKER_COMPOSE_VERSION=1.27.4
-WATCHEXEC_VERSION='1.12.0'
+DOCKER_COMPOSE_VERSION=v2.0.1
+WATCHEXEC_VERSION='1.17.1'
 
 apt-get update
 apt-get upgrade -y
@@ -22,9 +22,10 @@ install_docker() {
 }
 
 install_compose() {
-  curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  chmod +x /usr/local/bin/docker-compose
-  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+  PLUGINS=/usr/lib/docker/cli-plugins
+  mkdir -p $PLUGINS
+  curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o $PLUGINS/docker-compose
+  chmod +x $PLUGINS/docker-compose
 }
 
 install_envsbst() {
@@ -34,7 +35,7 @@ install_envsbst() {
 }
 
 install_watchexec() {
-  curl -L https://github.com/watchexec/watchexec/releases/download/${WATCHEXEC_VERSION}/watchexec-${WATCHEXEC_VERSION}-x86_64-unknown-linux-gnu.deb -o /tmp/watchexec.deb
+  curl -L https://github.com/watchexec/watchexec/releases/download/cli-v${WATCHEXEC_VERSION}/watchexec-${WATCHEXEC_VERSION}-x86_64-unknown-linux-gnu.deb -o /tmp/watchexec.deb
   apt-get install /tmp/watchexec.deb -y
 }
 
