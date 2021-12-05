@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 set -e
 
 DOCKER_COMPOSE_VERSION=v2.0.1
@@ -13,7 +13,7 @@ install_docker() {
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
   echo \
-    "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
   apt-get update
@@ -35,7 +35,7 @@ install_envsbst() {
 }
 
 install_watchexec() {
-  curl -L https://github.com/watchexec/watchexec/releases/download/cli-v${WATCHEXEC_VERSION}/watchexec-${WATCHEXEC_VERSION}-x86_64-unknown-linux-gnu.deb -o /tmp/watchexec.deb
+  curl -L https://github.com/watchexec/watchexec/releases/download/cli-v${WATCHEXEC_VERSION}/watchexec-${WATCHEXEC_VERSION}-$(uname -m)-unknown-linux-gnu.deb -o /tmp/watchexec.deb
   apt-get install /tmp/watchexec.deb -y
 }
 
