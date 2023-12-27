@@ -32,6 +32,7 @@ services:
       - ROCKET_ENV=prod
       - WEBSOCKET_ENABLED=true
       - ICON_CACHE_FOLDER=/cache/bw_icon
+      - DOMAIN="https://bitwarden.nrjais.com/"
     volumes:
       - /data/bw-data/:/data/
       - /cache/bw_icon/:/cache/bw_icon
